@@ -1,0 +1,281 @@
+<title>Foxjam Collective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400&display=swap">
+<style>
+/* Layout: one column, a polyrhythm wheel beside the name, then short sections that stack on phones */
+:root {
+  --bg: #f3efe6;
+  --surface: #e8e1d2;
+  --fg: #1d2420;
+  --muted: #5b6159;
+  --accent: #c2541b;   /* fox orange */
+  --accent-2: #1f6b5c; /* deep teal */
+  --accent-3: #b88a17; /* brass */
+  --line: #cfc6b3;
+  --display: "Syne", "Trebuchet MS", sans-serif;
+  --body: "Figtree", system-ui, -apple-system, sans-serif;
+  --mono: "DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131815; --surface: #1c2420; --fg: #ece6d8; --muted: #a2a89c;
+    --accent: #ee7a3c; --accent-2: #4fb39c; --accent-3: #dcb145; --line: #2d3832;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131815; --surface: #1c2420; --fg: #ece6d8; --muted: #a2a89c;
+  --accent: #ee7a3c; --accent-2: #4fb39c; --accent-3: #dcb145; --line: #2d3832;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 1.05rem; line-height: 1.6;
+}
+.wrap { max-width: 68rem; margin: 0 auto; padding-inline: 1.25rem; }
+
+nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: 1.25rem; flex-wrap: wrap; }
+.mark { font-family: var(--display); font-weight: 800; font-size: 1.15rem; letter-spacing: .02em; }
+.mark span { color: var(--accent); }
+nav ul { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+nav a { color: var(--fg); text-decoration: none; font-weight: 500; }
+nav a:hover, nav a:focus-visible { color: var(--accent); }
+
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: center; padding-block: 2.5rem 3.5rem; }
+.hero > * { min-width: 0; }
+.eyebrow { font-family: var(--mono); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); margin: 0 0 1rem; }
+h1 {
+  font-family: var(--display); font-weight: 800; margin: 0;
+  font-size: clamp(3rem, 9vw, 6.5rem); line-height: .92; letter-spacing: -.02em;
+  text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--accent); display: block; }
+.lede { max-width: 34rem; margin: 1.5rem 0 2rem; color: var(--muted); font-size: 1.15rem; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: var(--accent); color: #fff; text-decoration: none; font-weight: 600;
+  padding: .85rem 1.4rem; border-radius: 999px; transition: transform .15s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
+
+.wheel { position: relative; }
+.wheel canvas { width: 100%; max-width: 100%; aspect-ratio: 1; display: block; }
+.wheel-ctrl { display: flex; justify-content: center; gap: .5rem; margin-top: .5rem; flex-wrap: wrap; }
+.wheel-ctrl button {
+  font-family: var(--mono); font-size: .8rem; background: transparent; color: var(--fg);
+  border: 1px solid var(--line); border-radius: 999px; padding: .35rem .8rem; cursor: pointer;
+}
+.wheel-ctrl button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+section { padding-block: 3.5rem; border-top: 1px solid var(--line); }
+h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 1.25rem; text-wrap: balance; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+.cols > * { min-width: 0; }
+.cols p { margin: 0 0 1rem; max-width: 36rem; }
+
+.sounds { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0; padding: 0; list-style: none; }
+.sounds li { padding: .45rem .9rem; border-radius: 999px; background: var(--surface); font-weight: 500; }
+.sounds li:nth-child(3n+1) { box-shadow: inset 3px 0 0 var(--accent); }
+.sounds li:nth-child(3n+2) { box-shadow: inset 3px 0 0 var(--accent-2); }
+.sounds li:nth-child(3n)   { box-shadow: inset 3px 0 0 var(--accent-3); }
+
+.album {
+  display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center;
+  background: var(--surface); border-radius: 1.25rem; padding: 2rem;
+}
+.album > * { min-width: 0; }
+.cover {
+  width: 11rem; max-width: 100%; aspect-ratio: 1; border-radius: .75rem;
+  background:
+    radial-gradient(circle at 30% 30%, var(--accent-3) 0 18%, transparent 19%),
+    radial-gradient(circle at 70% 65%, var(--accent) 0 28%, transparent 29%),
+    var(--accent-2);
+}
+.album h3 { font-family: var(--display); font-size: 1.6rem; margin: 0 0 .5rem; }
+.album p { margin: 0 0 1.25rem; color: var(--muted); }
+.tag { font-family: var(--mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .4rem; }
+
+.join p { max-width: 38rem; }
+
+footer { padding-block: 2rem 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+@media (max-width: 760px) {
+  .hero, .cols { grid-template-columns: 1fr; }
+  .hero { padding-block: 1rem 2.5rem; }
+  .wheel { max-width: 22rem; margin: 0 auto; width: 100%; }
+  .album { grid-template-columns: 1fr; }
+  nav ul { gap: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+
+<div class="wrap">
+  <nav>
+    <div class="mark">FOX<span>JAM</span></div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#music">Music</a></li>
+      <li><a href="#join">Join</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">A music collective · World music</p>
+      <h1>Foxjam <em>Collective</em></h1>
+      <p class="lede">Many hands, many rhythms, one jam. We mix sounds from around the world into music that moves between traditions instead of staying inside one.</p>
+      <a class="btn" href="https://open.spotify.com/artist/1kokeffisjUITRGWqQUvsI" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        Listen on Spotify
+      </a>
+    </div>
+    <div class="wheel">
+      <canvas id="wheel" width="600" height="600" aria-label="Animated polyrhythm wheel: three rings of beats in 3, 4 and 5"></canvas>
+      <div class="wheel-ctrl">
+        <button id="r345" aria-pressed="true">3 · 4 · 5</button>
+        <button id="r23" aria-pressed="false">2 · 3</button>
+        <button id="r7" aria-pressed="false">7 · 4</button>
+        <button id="pause" aria-pressed="false">Pause</button>
+      </div>
+    </div>
+  </header>
+
+  <section id="about">
+    <h2>Music without borders</h2>
+    <div class="cols">
+      <div>
+        <p>Foxjam is a collective of musicians who play all kinds of music. Some of us come from folk, some from jazz, some from electronic music. We meet in the middle and see what happens.</p>
+        <p>Every track starts as a jam. Rhythms from one part of the world meet melodies from another, and the song grows from there.</p>
+      </div>
+      <div>
+        <p class="tag">What you might hear</p>
+        <ul class="sounds">
+          <li>Afrobeat grooves</li>
+          <li>Balkan brass</li>
+          <li>Latin percussion</li>
+          <li>Nordic folk</li>
+          <li>Desert blues</li>
+          <li>Dub &amp; reggae</li>
+          <li>Odd meters</li>
+          <li>Electronic textures</li>
+          <li>Improvisation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="music">
+    <h2>Our first album is out</h2>
+    <div class="album">
+      <div class="cover" role="img" aria-label="Album artwork placeholder"></div>
+      <div>
+        <p class="tag">Debut release</p>
+        <h3>Foxjam on Spotify</h3>
+        <p>Our first album is streaming now. Put it on, turn it up, and follow us to hear new music as soon as it drops.</p>
+        <a class="btn" href="https://open.spotify.com/artist/1kokeffisjUITRGWqQUvsI" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          Play the album
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="join" class="join">
+    <h2>Come jam with us</h2>
+    <p>The collective is open. If you play an instrument, sing, produce or just love music from everywhere, we want to hear from you. Follow Foxjam on Spotify and keep an eye out for our next live session.</p>
+  </section>
+
+  <footer>
+    <span>© <span id="year">2026</span> Foxjam Collective</span>
+    <span>Made with many rhythms</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let rings = [3, 4, 5];
+  let paused = reduce;
+  let start = performance.now();
+  let pausedAt = start;
+  const cycle = 4000; // ms per full turn
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function colors() {
+    const s = getComputedStyle(document.documentElement);
+    return {
+      fg: s.getPropertyValue('--fg').trim(),
+      line: s.getPropertyValue('--line').trim(),
+      list: [s.getPropertyValue('--accent').trim(), s.getPropertyValue('--accent-2').trim(), s.getPropertyValue('--accent-3').trim()]
+    };
+  }
+
+  function draw(now) {
+    const t = paused ? pausedAt : now;
+    const phase = ((t - start) % cycle) / cycle; // 0..1
+    const c = colors();
+    const W = canvas.width, C = W / 2;
+    ctx.clearRect(0, 0, W, W);
+
+    rings.forEach((beats, i) => {
+      const r = W * 0.18 + i * W * 0.1;
+      const col = c.list[i % 3];
+      ctx.beginPath();
+      ctx.arc(C, C, r, 0, Math.PI * 2);
+      ctx.strokeStyle = c.line; ctx.lineWidth = 2; ctx.stroke();
+
+      for (let b = 0; b < beats; b++) {
+        const pos = b / beats;
+        const a = pos * Math.PI * 2 - Math.PI / 2;
+        let d = Math.abs(phase - pos); d = Math.min(d, 1 - d);
+        const hit = Math.max(0, 1 - d * beats * 4); // glow as the hand passes
+        const x = C + Math.cos(a) * r, y = C + Math.sin(a) * r;
+        ctx.beginPath();
+        ctx.arc(x, y, 10 + hit * 12, 0, Math.PI * 2);
+        ctx.fillStyle = col; ctx.globalAlpha = 0.35 + hit * 0.65; ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    });
+
+    // the sweeping hand
+    const outer = W * 0.18 + (rings.length - 1) * W * 0.1 + 30;
+    const ha = phase * Math.PI * 2 - Math.PI / 2;
+    ctx.beginPath(); ctx.moveTo(C, C);
+    ctx.lineTo(C + Math.cos(ha) * outer, C + Math.sin(ha) * outer);
+    ctx.strokeStyle = c.fg; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(C, C, 8, 0, Math.PI * 2); ctx.fillStyle = c.fg; ctx.fill();
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  const sets = { r345: [3, 4, 5], r23: [2, 3], r7: [7, 4] };
+  Object.keys(sets).forEach(id => {
+    document.getElementById(id).addEventListener('click', () => {
+      rings = sets[id];
+      Object.keys(sets).forEach(k => document.getElementById(k).setAttribute('aria-pressed', k === id));
+      canvas.setAttribute('aria-label', 'Animated polyrhythm wheel: rings of beats in ' + rings.join(', '));
+    });
+  });
+
+  const pauseBtn = document.getElementById('pause');
+  pauseBtn.setAttribute('aria-pressed', paused);
+  pauseBtn.textContent = paused ? 'Play' : 'Pause';
+  pauseBtn.addEventListener('click', () => {
+    const now = performance.now();
+    if (paused) { start += now - pausedAt; } else { pausedAt = now; }
+    paused = !paused;
+    pauseBtn.textContent = paused ? 'Play' : 'Pause';
+    pauseBtn.setAttribute('aria-pressed', paused);
+  });
+})();
+</script>
